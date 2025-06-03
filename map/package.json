@@ -1,0 +1,17 @@
+{
+  "name": "map",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ol": "^10.4.0",
+    "vite": "^6.0.11"
+  }
+}
