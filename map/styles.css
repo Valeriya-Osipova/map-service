@@ -1,4 +1,9 @@
-body, html {
+* {
+  font-family: Roboto;
+}
+
+body,
+html {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -6,8 +11,12 @@ body, html {
 }
 
 .header {
-  padding: 10px 26px;
+  height: 103px;
+  padding: 0px 26px;
   box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header_logo {
@@ -16,19 +25,33 @@ body, html {
   align-items: center;
 }
 
+.header_name {
+  margin-left: 22px;
+  font-size: 36px;
+  color: #094052;
+  font-weight: 700;
+}
+
 .map-container {
   display: flex;
-  flex-direction: row-reverse;
 }
 
 .instruments-container {
-  height: 100%;
-  width: 25%;
+  height: 100vh;
+  max-height: calc(100vh - 103px);
+  width: 350px;
   box-shadow: 3px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
 .map {
-  width: 75%;
-  height: calc(100% - 103px);
+  flex-grow: 1;
+  max-height: calc(100vh - 103px);
+}
+
+.footer {
   position: absolute;
+  width: 100%;
+  bottom: 0;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.5);
 }
