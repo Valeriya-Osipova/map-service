@@ -1,0 +1,55 @@
+.root {
+  padding: 12px 20px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &--default {
+    background: #1fb7a9;
+    color: white;
+    border-radius: 5px;
+
+    &:hover {
+      background: lighten(#1fb7a9, 10%);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  &--white {
+    background: white;
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+    &:hover {
+      background: darken(white, 10%);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  &--icon {
+    background: transparent;
+    padding: 8px;
+    border-radius: 50%;
+  }
+
+  &__text {
+    font-size: 14px;
+  }
+
+  &__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
