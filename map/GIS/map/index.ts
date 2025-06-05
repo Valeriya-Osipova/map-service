@@ -5,9 +5,12 @@ import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import { toLonLat, transform } from 'ol/proj';
 import { CustomButton } from '../components/CustomButton/CustomButton';
-import { AuthPage } from '../components/Auth/authPage';
 
 document.addEventListener('DOMContentLoaded', function () {
+  init();
+});
+
+function init() {
   const mapDiv = document.getElementById('map');
   const map = new Map({
     target: mapDiv,
@@ -28,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   initFooterControls(map);
-});
+}
 
 function createAuthButtons(container: HTMLElement) {
   const buttonContainer = document.createElement('div');
@@ -39,7 +42,9 @@ function createAuthButtons(container: HTMLElement) {
     root: buttonContainer,
     text: 'Войти',
     variant: 'default',
-    clickHandler: () => console.log('Clicked!'),
+    clickHandler: () => {
+      window.location.href = '/login';
+    },
   });
 
   new CustomButton({
@@ -47,13 +52,7 @@ function createAuthButtons(container: HTMLElement) {
     text: 'Зарегистрироваться',
     variant: 'default',
     clickHandler: () => {
-      const authPage = new AuthPage({
-        mode: 'register',
-        onSubmit: (data) => {
-          console.log('Registration data:', data);
-        },
-        container: document.body,
-      });
+      window.location.href = '/register';
     },
   });
 

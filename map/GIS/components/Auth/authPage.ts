@@ -29,13 +29,41 @@ export class AuthPage {
     this.render();
   }
 
-  private render() {
+  render() {
     this.form.innerHTML = '';
-    this.hideMap();
+    const isAuthPage =
+      window.location.pathname === '/login' || window.location.pathname === '/register';
+
+    const mapHeader = document.getElementById('auth');
+    if (mapHeader) {
+      if (isAuthPage) {
+        new CustomButton({
+          root: mapHeader,
+          text: 'Назад',
+          variant: 'default',
+          clickHandler: () => (window.location.href = '/'),
+        });
+      }
+    }
+
+    const header = this.container.appendChild(document.createElement('div'));
+    header.innerText = this.mode === 'login' ? 'Авторизация' : 'Регистрация';
+    header.className = authPageStyles.header;
 
     const authPopup = this.container.appendChild(document.createElement('div'));
     authPopup.className = authPageStyles.authPopup;
 
+    if (this.mode === 'login') {
+      this.renderLogin(authPopup);
+    } else if (this.mode === 'register') {
+      this.renderRegistration(authPopup);
+    } else {
+      console.log('unknown mode');
+      return;
+    }
+  }
+
+  private renderRegistration(authPopup: HTMLElement) {
     const inputName = new CustomInput({
       root: authPopup,
       labelText: 'Имя',
@@ -63,8 +91,11 @@ export class AuthPage {
       type: 'password',
     });
 
+    const buttonContainer = authPopup.appendChild(document.createElement('div'));
+    buttonContainer.className = authPageStyles.buttonContainer;
+
     new CustomButton({
-      root: authPopup,
+      root: buttonContainer,
       text: 'Зарегистрироваться',
       clickHandler() {
         console.log('register');
@@ -72,15 +103,27 @@ export class AuthPage {
     });
   }
 
-  private hideMap() {
-    const body = document.getElementById('map-container');
-    const footer = document.getElementById('footer');
-    if (!body || !footer) {
-      console.error('Map container not found');
-      return;
-    }
-    body.style.display = 'none';
-    footer.style.display = 'none';
+  private renderLogin(authPopup: HTMLElement) {
+    const login = new CustomInput({
+      root: authPopup,
+      labelText: 'Логин',
+    });
+
+    const password = new CustomInput({
+      root: authPopup,
+      labelText: 'Пароль',
+      type: 'password',
+    });
+
+    const buttonContainer = authPopup.appendChild(document.createElement('div'));
+    buttonContainer.className = authPageStyles.buttonContainer;
+    new CustomButton({
+      root: buttonContainer,
+      text: 'Войти',
+      clickHandler() {
+        console.log('login');
+      },
+    });
   }
 
   private handleSubmit = (e: Event) => {
