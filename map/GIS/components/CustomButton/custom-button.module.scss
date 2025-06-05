@@ -23,11 +23,6 @@
     color: black;
     border: 1px solid #ccc;
     border-radius: 5px;
-
-    &:hover {
-      background: darken(white, 10%);
-    }
-
     &:active {
       transform: scale(0.98);
     }

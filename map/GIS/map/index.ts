@@ -5,11 +5,11 @@ import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import { toLonLat, transform } from 'ol/proj';
 import { CustomButton } from '../components/CustomButton/CustomButton';
+import { AuthPage } from '../components/Auth/authPage';
 
 document.addEventListener('DOMContentLoaded', function () {
   const mapDiv = document.getElementById('map');
   const map = new Map({
-    // @ts-expect-error TS2322
     target: mapDiv,
     layers: [
       new TileLayer({
@@ -46,7 +46,15 @@ function createAuthButtons(container: HTMLElement) {
     root: buttonContainer,
     text: 'Зарегистрироваться',
     variant: 'default',
-    clickHandler: () => console.log('Clicked!'),
+    clickHandler: () => {
+      const authPage = new AuthPage({
+        mode: 'register',
+        onSubmit: (data) => {
+          console.log('Registration data:', data);
+        },
+        container: document.body,
+      });
+    },
   });
 
   container.appendChild(buttonContainer);
