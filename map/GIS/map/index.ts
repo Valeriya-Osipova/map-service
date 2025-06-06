@@ -28,10 +28,6 @@ function init() {
     }),
   });
 
-  // localStorage.clear();
-
-  console.log(JSON.parse(localStorage.getItem('user_data')));
-
   const userData = JSON.parse(localStorage.getItem('user_data'));
 
   const authDiv = document.getElementById('auth');

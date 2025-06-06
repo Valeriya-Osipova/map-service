@@ -91,7 +91,6 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Имя',
       required: true,
-      value: 'Валерия',
       onChange() {
         inputName.requiredErr = false;
       },
@@ -101,7 +100,6 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Фамилия',
       required: true,
-      value: 'Осипова',
       onChange() {
         lastName.requiredErr = false;
       },
@@ -111,7 +109,6 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Логин (email)',
       required: true,
-      value: 'val.osipova@gmail.com',
       onChange() {
         login.requiredErr = false;
       },
@@ -121,7 +118,6 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Пароль',
       type: 'password',
-      value: '1234',
       required: true,
       onChange() {
         password.requiredErr = false;
@@ -133,7 +129,6 @@ export class AuthPage {
       labelText: 'Подтверждение пароля',
       type: 'password',
       required: true,
-      value: '1234',
       onChange() {
         passwordRepeat.requiredErr = false;
       },
@@ -161,8 +156,6 @@ export class AuthPage {
         if (!login.value?.trim()) emptyFields.push(login);
         if (!password.value?.trim()) emptyFields.push(password);
         if (!passwordRepeat.value?.trim()) emptyFields.push(passwordRepeat);
-
-        console.log(emptyFields);
 
         if (emptyFields.length > 0) {
           emptyFields.forEach((input) => {
