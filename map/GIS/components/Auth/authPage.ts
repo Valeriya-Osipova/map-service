@@ -187,7 +187,26 @@ export class AuthPage {
           password: password.value,
         };
 
-        console.log('Регистрация успешна :', this.registerData);
+        console.log(this.registerData);
+        fetch('/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: inputName.value,
+            lastName: lastName.value,
+            login: login.value,
+            password: password.value,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('Success:', data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
       },
     });
   }
@@ -247,7 +266,24 @@ export class AuthPage {
           password: password.value,
         };
 
-        console.log('Авторизация успешна :', this.loginData);
+        console.log(this.loginData);
+        fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            login: login.value,
+            password: password.value,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('Success:', data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
       },
     });
   }
