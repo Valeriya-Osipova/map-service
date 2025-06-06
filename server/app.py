@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 CORS(app, resources={
     r"/api/*": {
-        "origins": ["http://localhost:8000", "http://127.0.0.1:8000"],
+        "origins": ["http://51.250.73.226:8000", "http://localhost:8000", "http://127.0.0.1:8000"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }
@@ -18,7 +18,7 @@ CORS(app, resources={
 def example():
   return jsonify(message='Hello from Flask!')
 
-@app.route('/register', methods=['POST'])
+@app.route('/api/register', methods=['POST'])
 def register():
     # Получаем данные из запроса
     data: Dict[str, Any] = request.get_json()
@@ -42,7 +42,7 @@ def register():
     }
     return jsonify(response_data), 200
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
 
@@ -80,7 +80,7 @@ def login():
         'token': 'dummy_token_for_example'
     }), 200
 
-@app.route('/emailConfirm', methods=['POST'])
+@app.route('/api/emailConfirm', methods=['POST'])
 def email_confirm():
     
     data: Dict[str, Any] = request.get_json()

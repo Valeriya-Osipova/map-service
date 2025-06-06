@@ -1,6 +1,7 @@
 import { CustomButton } from '../../CustomButton/CustomButton';
 import { CustomInput } from '../../CustomInput/CustomInput';
 import authPageStyles from './auth-page.module.scss';
+import { renderAuthPage } from '../auth-buttons';
 
 export type AuthMode = 'login' | 'register';
 
@@ -64,7 +65,11 @@ export class AuthPage {
           root: mapHeader,
           text: 'Назад',
           variant: 'default',
-          clickHandler: () => (window.location.href = '/'),
+          clickHandler: () => {
+            history.pushState(null, '', '/');
+            renderAuthPage();
+            // window.location.href = '/'
+          },
         });
       }
     }
