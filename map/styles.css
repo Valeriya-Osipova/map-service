@@ -38,7 +38,7 @@ html {
 
 .instruments-container {
   height: 100vh;
-  max-height: calc(100vh - 103px);
+  max-height: calc(100vh - 155px);
   width: 350px;
   box-shadow: 3px 0px 5px rgba(0, 0, 0, 0.2);
   padding: 26px;

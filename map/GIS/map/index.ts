@@ -78,7 +78,7 @@ function initFooterControls(map: Map) {
   // });
 }
 
-fetch('/api/example')
+fetch(`http://localhost:5000/api/example`)
   .then((response) => response.json())
   .then((data) => {
     console.log(data);
