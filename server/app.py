@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from typing import Dict, Any
+from mock_users import MOCK_USERS 
 
 app = Flask(__name__)
 
@@ -33,26 +34,41 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    # Получаем данные из запроса
-    data: Dict[str, Any] = request.get_json()
-    
-    # Проверяем обязательные поля
-    required_fields = ['login', 'password']
-    if not all(field in data for field in required_fields):
+    data = request.get_json()
+
+    if not all(field in data for field in ['login', 'password']):
         return jsonify({'error': 'Missing required fields'}), 400
     
+    login = data['login']
+    password = data['password']
+
+    if login not in MOCK_USERS:
+        return jsonify({
+            'status': 'error',
+            'message': 'Пользователь с таким логином не найден'
+        }), 404
+    
+    user = MOCK_USERS[login]
+    
+    if password != user['password']:
+        return jsonify({
+            'status': 'error',
+            'message': 'Неверный пароль'
+        }), 401
     # В реальном приложении здесь была бы проверка учетных данных
     # (поиск пользователя, проверка пароля и т.д.)
     
     # Возвращаем те же данные + токен (в реальном приложении)
-    response_data = {
+   
+    return jsonify({
         'status': 'success',
         'user': {
-            'login': data['login']
+            'name': user['name'],
+            'lastName': user['lastName'],
+            'login': user['login']
         },
         'token': 'dummy_token_for_example'
-    }
-    return jsonify(response_data), 200
+    }), 200
 
 @app.route('/emailConfirm', methods=['POST'])
 def email_confirm():
