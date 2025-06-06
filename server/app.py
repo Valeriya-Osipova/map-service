@@ -54,5 +54,20 @@ def login():
     }
     return jsonify(response_data), 200
 
+@app.route('/emailConfirm', methods=['POST'])
+def email_confirm():
+    
+    data: Dict[str, Any] = request.get_json()
+
+    required_fields = ['code']
+    if not all(field in data for field in required_fields):
+        return jsonify({'error': 'Missing required fields'}), 400
+    
+    response_data = {
+        'status': 'success',
+        'code': data['code'],
+    }
+    return jsonify(response_data), 200
+
 if __name__ == '__main__':
   app.run(debug=True)
