@@ -239,12 +239,19 @@ export class AuthPage {
     errorMessage.style.color = '#BC000A';
     errorMessage.style.fontSize = '14px';
 
+    const recoverPass = authPopup.appendChild(document.createElement('div'));
+    recoverPass.textContent = 'Восстановить пароль';
+    recoverPass.className = authPageStyles.repeatMsg;
+    recoverPass.style.display = 'none';
+    recoverPass.style.marginTop = '16px';
+
     const buttonContainer = authPopup.appendChild(document.createElement('div'));
     buttonContainer.className = authPageStyles.buttonContainer;
     new CustomButton({
       root: buttonContainer,
       text: 'Войти',
       clickHandler: () => {
+        recoverPass.style.display = 'none';
         errorMessage.style.display = 'none';
         login.requiredErr = false;
         password.requiredErr = false;
@@ -286,6 +293,7 @@ export class AuthPage {
             } else {
               errorMessage.style.display = 'block';
               errorMessage.textContent = `${data.message}`;
+              recoverPass.style.display = 'inline-block';
             }
           })
           .catch((error) => {
