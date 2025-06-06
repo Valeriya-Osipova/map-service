@@ -14,6 +14,18 @@
   padding: 32px;
 }
 
+.repeatMsg {
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+  &:hover {
+    color: #585579;
+  }
+  &:active {
+    color: #787599;
+  }
+}
+
 .buttonContainer {
   display: flex;
   justify-content: center;

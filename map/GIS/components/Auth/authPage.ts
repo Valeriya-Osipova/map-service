@@ -85,6 +85,7 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Имя',
       required: true,
+      value: 'Валерия',
       onChange() {
         inputName.requiredErr = false;
       },
@@ -94,6 +95,7 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Фамилия',
       required: true,
+      value: 'Осипова',
       onChange() {
         lastName.requiredErr = false;
       },
@@ -103,6 +105,7 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Логин (email)',
       required: true,
+      value: 'val.osipova@gmail.com',
       onChange() {
         login.requiredErr = false;
       },
@@ -112,6 +115,7 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Пароль',
       type: 'password',
+      value: '1234',
       required: true,
       onChange() {
         password.requiredErr = false;
@@ -123,6 +127,7 @@ export class AuthPage {
       labelText: 'Подтверждение пароля',
       type: 'password',
       required: true,
+      value: '1234',
       onChange() {
         passwordRepeat.requiredErr = false;
       },
@@ -139,7 +144,7 @@ export class AuthPage {
     new CustomButton({
       root: buttonContainer,
       text: 'Зарегистрироваться',
-      clickHandler() {
+      clickHandler: () => {
         errorMessage.style.display = 'none';
         [inputName, lastName, login, password, passwordRepeat].forEach((input) => {
           input.requiredErr = false;
@@ -187,7 +192,29 @@ export class AuthPage {
           password: password.value,
         };
 
-        console.log('Регистрация успешна :', this.registerData);
+        console.log(this.registerData);
+        fetch('/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: inputName.value,
+            lastName: lastName.value,
+            login: login.value,
+            password: password.value,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data: any) => {
+            console.log('Success:', data);
+            console.log(data);
+
+            this.emailConfirm(data.user.login, authPopup);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
       },
     });
   }
@@ -221,16 +248,16 @@ export class AuthPage {
     new CustomButton({
       root: buttonContainer,
       text: 'Войти',
-      clickHandler() {
+      clickHandler: () => {
         errorMessage.style.display = 'none';
         login.requiredErr = false;
         password.requiredErr = false;
 
-        if (!login.value.length || !password.value.length) {
+        if (!login.value || !password.value) {
           errorMessage.style.display = 'block';
           errorMessage.textContent = 'Необходимо заполнить все поля';
-          if (!login.value.length) login.requiredErr = true;
-          if (!password.value.length) password.requiredErr = true;
+          if (!login.value) login.requiredErr = true;
+          if (!password.value) password.requiredErr = true;
           return;
         }
 
@@ -247,7 +274,77 @@ export class AuthPage {
           password: password.value,
         };
 
-        console.log('Авторизация успешна :', this.loginData);
+        fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            login: login.value,
+            password: password.value,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('Success:', data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      },
+    });
+  }
+
+  private emailConfirm(email: string, authPopup: HTMLElement) {
+    authPopup.innerHTML = '';
+    const confirmMessage = authPopup.appendChild(document.createElement('div'));
+    confirmMessage.innerHTML = `Введите код подтверждения отправленный на почту <strong>${email}</strong>`;
+    confirmMessage.style.marginBottom = '25px';
+
+    const code = new CustomInput({
+      root: authPopup,
+      labelText: 'Код подтверждения',
+    });
+
+    const errorMessage = authPopup.appendChild(document.createElement('div'));
+    errorMessage.style.display = 'none';
+    errorMessage.style.color = '#BC000A';
+    errorMessage.style.fontSize = '14px';
+    errorMessage.style.marginBottom = '26px';
+
+    const repeat = authPopup.appendChild(document.createElement('div'));
+    repeat.textContent = 'Отправить код повторно';
+    repeat.className = authPageStyles.repeatMsg;
+
+    const buttonContainer = authPopup.appendChild(document.createElement('div'));
+    buttonContainer.className = authPageStyles.buttonContainer;
+
+    new CustomButton({
+      root: buttonContainer,
+      text: 'Подтвердить',
+      clickHandler: () => {
+        errorMessage.style.display = 'none';
+        if (!code.value) {
+          errorMessage.style.display = 'block';
+          errorMessage.textContent = 'Неверный код подтверждения';
+          return;
+        }
+        fetch('/api/emailConfirm', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            code: code.value,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('Success:', data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
       },
     });
   }
