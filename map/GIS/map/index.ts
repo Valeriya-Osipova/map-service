@@ -5,6 +5,7 @@ import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import { toLonLat, transform } from 'ol/proj';
 import { CustomButton } from '../components/CustomButton/CustomButton';
+import { InstrumentsControl } from '../controls/InstrumentsControl/InstrumentsControl';
 
 document.addEventListener('DOMContentLoaded', function () {
   init();
@@ -31,6 +32,7 @@ function init() {
   }
 
   initFooterControls(map);
+  initInstruments();
 }
 
 function createAuthButtons(container: HTMLElement) {
@@ -57,6 +59,13 @@ function createAuthButtons(container: HTMLElement) {
   });
 
   container.appendChild(buttonContainer);
+}
+
+function initInstruments() {
+  const instruments = document.getElementById('instruments');
+  if (!instruments) return;
+
+  InstrumentsControl.builder({ root: instruments });
 }
 
 function initFooterControls(map: Map) {
