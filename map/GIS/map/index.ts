@@ -4,8 +4,9 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import { toLonLat, transform } from 'ol/proj';
-import { CustomButton } from '../components/CustomButton/CustomButton';
 import { InstrumentsControl } from '../controls/InstrumentsControl/InstrumentsControl';
+import { createAuthButtons } from '../components/Auth/auth-buttons';
+import { createUserContainer } from '../components/Auth/user-container';
 
 document.addEventListener('DOMContentLoaded', function () {
   init();
@@ -26,39 +27,20 @@ function init() {
       projection: 'EPSG:3857',
     }),
   });
+
+  const userData = JSON.parse(localStorage.getItem('user_data'));
+
   const authDiv = document.getElementById('auth');
   if (authDiv) {
-    createAuthButtons(authDiv);
+    if (userData) {
+      createUserContainer(authDiv, userData);
+    } else {
+      createAuthButtons(authDiv);
+    }
   }
 
   initFooterControls(map);
   initInstruments();
-}
-
-function createAuthButtons(container: HTMLElement) {
-  const buttonContainer = document.createElement('div');
-  buttonContainer.style.display = 'flex';
-  buttonContainer.style.gap = '30px';
-
-  new CustomButton({
-    root: buttonContainer,
-    text: 'Войти',
-    variant: 'default',
-    clickHandler: () => {
-      window.location.href = '/login';
-    },
-  });
-
-  new CustomButton({
-    root: buttonContainer,
-    text: 'Зарегистрироваться',
-    variant: 'default',
-    clickHandler: () => {
-      window.location.href = '/register';
-    },
-  });
-
-  container.appendChild(buttonContainer);
 }
 
 function initInstruments() {

@@ -1,5 +1,5 @@
-import { CustomButton } from '../CustomButton/CustomButton';
-import { CustomInput } from '../CustomInput/CustomInput';
+import { CustomButton } from '../../CustomButton/CustomButton';
+import { CustomInput } from '../../CustomInput/CustomInput';
 import authPageStyles from './auth-page.module.scss';
 
 export type AuthMode = 'login' | 'register';
@@ -14,6 +14,12 @@ export interface RegisterData {
 export interface LoginData {
   login: string;
   password: string;
+}
+
+export interface UserData {
+  name: string;
+  lastName: string;
+  login: string;
 }
 
 export interface AuthPageOptions {
@@ -85,7 +91,6 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Имя',
       required: true,
-      value: 'Валерия',
       onChange() {
         inputName.requiredErr = false;
       },
@@ -95,7 +100,6 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Фамилия',
       required: true,
-      value: 'Осипова',
       onChange() {
         lastName.requiredErr = false;
       },
@@ -105,7 +109,6 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Логин (email)',
       required: true,
-      value: 'val.osipova@gmail.com',
       onChange() {
         login.requiredErr = false;
       },
@@ -115,7 +118,6 @@ export class AuthPage {
       root: authPopup,
       labelText: 'Пароль',
       type: 'password',
-      value: '1234',
       required: true,
       onChange() {
         password.requiredErr = false;
@@ -127,7 +129,6 @@ export class AuthPage {
       labelText: 'Подтверждение пароля',
       type: 'password',
       required: true,
-      value: '1234',
       onChange() {
         passwordRepeat.requiredErr = false;
       },
@@ -155,8 +156,6 @@ export class AuthPage {
         if (!login.value?.trim()) emptyFields.push(login);
         if (!password.value?.trim()) emptyFields.push(password);
         if (!passwordRepeat.value?.trim()) emptyFields.push(passwordRepeat);
-
-        console.log(emptyFields);
 
         if (emptyFields.length > 0) {
           emptyFields.forEach((input) => {
@@ -207,9 +206,6 @@ export class AuthPage {
         })
           .then((response) => response.json())
           .then((data: any) => {
-            console.log('Success:', data);
-            console.log(data);
-
             this.emailConfirm(data.user.login, authPopup);
           })
           .catch((error) => {
@@ -279,14 +275,18 @@ export class AuthPage {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            login: login.value,
-            password: password.value,
-          }),
+          body: JSON.stringify(this.loginData),
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log('Success:', data);
+            if (data.status === 'success') {
+              console.log('Success:', data);
+              localStorage.setItem('user_data', JSON.stringify(data.user));
+              window.location.href = '/';
+            } else {
+              errorMessage.style.display = 'block';
+              errorMessage.textContent = `${data.message}`;
+            }
           })
           .catch((error) => {
             console.error('Error:', error);
@@ -340,7 +340,11 @@ export class AuthPage {
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log('Success:', data);
+            console.log(data);
+            if (data.status === 'success') {
+              window.location.href = '/';
+              alert('Пользователь успешно зарегистрирован');
+            }
           })
           .catch((error) => {
             console.error('Error:', error);

@@ -1,0 +1,29 @@
+.profileContainer {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.userContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userLogo {
+  display: flex;
+  align-items: center;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+}
+
+.logoutButton svg {
+  cursor: pointer;
+}
+
+.logoutButton:hover svg path {
+  fill: #327b94;
+}
