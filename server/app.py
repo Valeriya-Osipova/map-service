@@ -1,10 +1,20 @@
 from flask import Flask, request, jsonify
 from typing import Dict, Any
 from mock_users import MOCK_USERS 
+from flask_cors import CORS
+
 
 app = Flask(__name__)
 
-@app.route('/example')
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["http://localhost:8000", "http://127.0.0.1:8000"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    }
+})
+
+@app.route('/api/example')
 def example():
   return jsonify(message='Hello from Flask!')
 
@@ -86,4 +96,4 @@ def email_confirm():
     return jsonify(response_data), 200
 
 if __name__ == '__main__':
-  app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
