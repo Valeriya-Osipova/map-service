@@ -1,0 +1,16 @@
+.header {
+  color: #094052;
+  font: 18px;
+  margin-bottom: 16px;
+}
+
+.item {
+  cursor: pointer;
+  padding: 13px;
+  background-color: #abded9;
+  color: #094052;
+  border-bottom: 1px solid #70c6be;
+  &:hover {
+    background-color: #c4ebe7;
+  }
+}
