@@ -4,6 +4,18 @@ import authPageStyles from './auth-page.module.scss';
 
 export type AuthMode = 'login' | 'register';
 
+export interface RegisterData {
+  name: string;
+  lastName: string;
+  login: string;
+  password: string;
+}
+
+export interface LoginData {
+  login: string;
+  password: string;
+}
+
 export interface AuthPageOptions {
   mode: AuthMode;
   onSubmit: (data: { name?: string; email: string; password: string }) => void;
@@ -18,6 +30,8 @@ export class AuthPage {
   private nameInput?: HTMLInputElement;
   private emailInput: HTMLInputElement;
   private passwordInput: HTMLInputElement;
+  private registerData: RegisterData | null;
+  private loginData: LoginData | null;
 
   constructor(options: AuthPageOptions) {
     this.mode = options.mode;
@@ -25,6 +39,9 @@ export class AuthPage {
     this.container = options.container;
     this.form = document.createElement('form');
     this.form.addEventListener('submit', this.handleSubmit);
+
+    this.registerData = null;
+    this.loginData = null;
 
     this.render();
   }
@@ -67,29 +84,54 @@ export class AuthPage {
     const inputName = new CustomInput({
       root: authPopup,
       labelText: 'Имя',
+      required: true,
+      onChange() {
+        inputName.requiredErr = false;
+      },
     });
 
     const lastName = new CustomInput({
       root: authPopup,
       labelText: 'Фамилия',
+      required: true,
+      onChange() {
+        lastName.requiredErr = false;
+      },
     });
 
     const login = new CustomInput({
       root: authPopup,
-      labelText: 'Логин',
+      labelText: 'Логин (email)',
+      required: true,
+      onChange() {
+        login.requiredErr = false;
+      },
     });
 
     const password = new CustomInput({
       root: authPopup,
       labelText: 'Пароль',
       type: 'password',
+      required: true,
+      onChange() {
+        password.requiredErr = false;
+      },
     });
 
     const passwordRepeat = new CustomInput({
       root: authPopup,
       labelText: 'Подтверждение пароля',
       type: 'password',
+      required: true,
+      onChange() {
+        passwordRepeat.requiredErr = false;
+      },
     });
+
+    const errorMessage = authPopup.appendChild(document.createElement('div'));
+    errorMessage.style.display = 'none';
+    errorMessage.style.color = '#BC000A';
+    errorMessage.style.fontSize = '14px';
 
     const buttonContainer = authPopup.appendChild(document.createElement('div'));
     buttonContainer.className = authPageStyles.buttonContainer;
@@ -98,7 +140,54 @@ export class AuthPage {
       root: buttonContainer,
       text: 'Зарегистрироваться',
       clickHandler() {
-        console.log('register');
+        errorMessage.style.display = 'none';
+        [inputName, lastName, login, password, passwordRepeat].forEach((input) => {
+          input.requiredErr = false;
+        });
+        const emptyFields = [];
+        if (!inputName.value?.trim()) emptyFields.push(inputName);
+        if (!lastName.value?.trim()) emptyFields.push(lastName);
+        if (!login.value?.trim()) emptyFields.push(login);
+        if (!password.value?.trim()) emptyFields.push(password);
+        if (!passwordRepeat.value?.trim()) emptyFields.push(passwordRepeat);
+
+        console.log(emptyFields);
+
+        if (emptyFields.length > 0) {
+          emptyFields.forEach((input) => {
+            input.requiredErr = true;
+          });
+          errorMessage.style.display = 'block';
+          errorMessage.textContent = 'Необходимо заполнить все поля';
+          return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(login.value as string)) {
+          login.requiredErr = true;
+          errorMessage.style.display = 'block';
+          errorMessage.textContent = 'Логин должен быть валидным email';
+          return;
+        }
+
+        if (password.value !== passwordRepeat.value) {
+          password.requiredErr = true;
+          passwordRepeat.requiredErr = true;
+          errorMessage.style.display = 'block';
+          errorMessage.textContent = 'Пароли не совпадают';
+          return;
+        }
+        errorMessage.style.display = 'none';
+        errorMessage.textContent = '';
+
+        this.registerData = {
+          name: inputName.value,
+          lastName: lastName.value,
+          login: login.value,
+          password: password.value,
+        };
+
+        console.log('Регистрация успешна :', this.registerData);
       },
     });
   }
@@ -106,14 +195,26 @@ export class AuthPage {
   private renderLogin(authPopup: HTMLElement) {
     const login = new CustomInput({
       root: authPopup,
-      labelText: 'Логин',
+      labelText: 'Логин (email)',
+      required: true,
+      onChange() {
+        login.requiredErr = false;
+      },
     });
 
     const password = new CustomInput({
       root: authPopup,
       labelText: 'Пароль',
       type: 'password',
+      required: true,
+      onChange() {
+        password.requiredErr = false;
+      },
     });
+    const errorMessage = authPopup.appendChild(document.createElement('div'));
+    errorMessage.style.display = 'none';
+    errorMessage.style.color = '#BC000A';
+    errorMessage.style.fontSize = '14px';
 
     const buttonContainer = authPopup.appendChild(document.createElement('div'));
     buttonContainer.className = authPageStyles.buttonContainer;
@@ -121,7 +222,32 @@ export class AuthPage {
       root: buttonContainer,
       text: 'Войти',
       clickHandler() {
-        console.log('login');
+        errorMessage.style.display = 'none';
+        login.requiredErr = false;
+        password.requiredErr = false;
+
+        if (!login.value.length || !password.value.length) {
+          errorMessage.style.display = 'block';
+          errorMessage.textContent = 'Необходимо заполнить все поля';
+          if (!login.value.length) login.requiredErr = true;
+          if (!password.value.length) password.requiredErr = true;
+          return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(login.value as string)) {
+          login.requiredErr = true;
+          errorMessage.style.display = 'block';
+          errorMessage.textContent = 'Логин должен быть валидным email';
+          return;
+        }
+
+        this.loginData = {
+          login: login.value,
+          password: password.value,
+        };
+
+        console.log('Авторизация успешна :', this.loginData);
       },
     });
   }

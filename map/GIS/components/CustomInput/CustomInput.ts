@@ -43,8 +43,10 @@ export class CustomInput {
   }
 
   set requiredErr(val: boolean) {
-    this.errMsg.style.display = val ? 'block' : 'none';
-    this.input.style.border = '1px solid #BC000A';
+    if (this.errMsg) {
+      this.errMsg.style.display = val ? 'block' : 'none';
+    }
+    this.input.style.border = val ? '1px solid #BC000A' : '1px solid #c4c4c4';
   }
 
   set labelText(val: string) {
