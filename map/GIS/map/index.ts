@@ -40,14 +40,17 @@ function init() {
   }
 
   initFooterControls(map);
-  initInstruments();
+  initInstruments(map);
 }
 
-function initInstruments() {
+function initInstruments(map: Map) {
   const instruments = document.getElementById('instruments');
   if (!instruments) return;
 
-  InstrumentsControl.builder({ root: instruments });
+  InstrumentsControl.builder({
+    root: instruments,
+    map: map,
+  });
 }
 
 function initFooterControls(map: Map) {
@@ -78,11 +81,11 @@ function initFooterControls(map: Map) {
   // });
 }
 
-fetch(`/api/example`)
-  .then((response) => response.json())
-  .then((data) => {
-    console.log(data);
-  })
-  .catch((error) => {
-    console.error('Error fetching data:', error);
-  });
+// fetch(`/api/example`)
+//   .then((response) => response.json())
+//   .then((data) => {
+//     console.log(data);
+//   })
+//   .catch((error) => {
+//     console.error('Error fetching data:', error);
+//   });

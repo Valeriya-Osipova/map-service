@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "strictNullChecks": false,
-    "strict": false
+    "strict": false,
+    "lib": ["DOM", "ESNext"]
   }
 }
