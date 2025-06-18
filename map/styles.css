@@ -40,8 +40,39 @@ html {
   height: 100vh;
   max-height: calc(100vh - 155px);
   width: 400px;
-  box-shadow: 3px 0px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 3px 0px 5px rgba(9, 64, 82, 0.2);
   padding: 26px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(9, 64, 82, 0.2) transparent;
+
+  /* Для WebKit браузеров (Chrome, Safari, Edge) */
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 8px 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(9, 64, 82, 0.2);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    opacity: 0;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    opacity: 1;
+    background-color: rgba(9, 64, 82, 0.3);
+  }
+
+  transition: scrollbar-color 0.3s ease;
+  &:hover {
+    scrollbar-color: rgba(9, 64, 82, 0.3) transparent;
+  }
 }
 
 .map {

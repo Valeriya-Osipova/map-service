@@ -29,17 +29,23 @@ export class InstrumentsControl {
     instrunemtsContainer.style.marginBottom = '35px';
 
     const instrumentsBlock = this.container.appendChild(document.createElement('div'));
+    instrumentsBlock.style.marginBottom = '60px';
 
     const header = instrumentsBlock.appendChild(document.createElement('div'));
     header.innerText = 'Инструменты';
     header.className = Instruments.header;
+
+    let isOpen = false;
 
     const isochronesBlock = instrumentsBlock.appendChild(document.createElement('div'));
     isochronesBlock.textContent = 'Построение изохрон';
     isochronesBlock.className = Instruments.item;
     const content = instrumentsBlock.appendChild(document.createElement('div'));
     isochronesBlock.addEventListener('click', () => {
-      this.isochroneControl = new IsochroneControl(this.map, content);
+      if (!isOpen) {
+        this.isochroneControl = new IsochroneControl(this.map, content);
+      }
+      isOpen = true;
     });
 
     const instArray = [

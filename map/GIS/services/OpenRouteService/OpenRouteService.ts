@@ -39,13 +39,16 @@ export class OpenRouteService {
     center: [number, number],
     profile: 'foot-walking' | 'driving-car' | 'cycling-regular',
     time: number,
+    range_type?: 'time' | 'distance',
     options: IsochroneOptions = {},
   ): Promise<void> {
     try {
+      console.log(range_type);
+
       const requestBody: any = {
         locations: [center],
-        range: [time * 60],
-        range_type: options.rangeType || 'time',
+        range: [range_type === 'time' ? time * 60 : time],
+        range_type: range_type || 'time',
         location_type: 'start',
         smoothing: 25,
       };

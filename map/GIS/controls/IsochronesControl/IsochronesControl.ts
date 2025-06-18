@@ -12,6 +12,7 @@ import CircleStyle from 'ol/style/Circle';
 import CustomSelect from '../../components/CustomSelect/CustomSelect';
 import { CustomInput } from '../../components/CustomInput/CustomInput';
 import HelpTooltip from '../../components/HelpTooltip/HelpTooltip';
+import { CustomCheckbox } from '../../components/CustomCheckbox/CustomCheckbox';
 
 export class IsochroneControl {
   private container: HTMLDivElement;
@@ -19,6 +20,7 @@ export class IsochroneControl {
   private pointLayer: VectorLayer<VectorSource>;
   private pointSource: VectorSource;
   private cursorTooltip: HelpTooltip;
+  private range_type: 'time' | 'distance' = 'time';
 
   constructor(
     private map: Map,
@@ -60,6 +62,25 @@ export class IsochroneControl {
     header.textContent = 'Построение изохрон';
     controlsContainer.appendChild(header);
 
+    const checkboxWrapper = controlsContainer.appendChild(document.createElement('div'));
+    checkboxWrapper.className = Styles.checkboxWrapper;
+
+    const checkbox = new CustomCheckbox({
+      root: checkboxWrapper,
+      labelText: 'Построить по расстоянию',
+      callback: () => {
+        if (checkbox.checked) {
+          timeIsochrones.style.display = 'none';
+          distanceIsochrones.style.display = 'block';
+          this.range_type = 'distance';
+        } else {
+          timeIsochrones.style.display = 'flex';
+          distanceIsochrones.style.display = 'none';
+          this.range_type = 'time';
+        }
+      },
+    });
+
     const profiles = [
       {
         title: 'Пешком',
@@ -82,13 +103,27 @@ export class IsochroneControl {
       defaultValue: 'foot-walking',
     });
 
+    const timeIsochrones = controlsContainer.appendChild(document.createElement('div'));
+    timeIsochrones.style.display = 'flex';
+    timeIsochrones.style.flexDirection = 'column';
+    timeIsochrones.style.gap = '15px';
+
     const timeInput = new CustomInput({
-      root: controlsContainer,
+      root: timeIsochrones,
       labelText: 'Время (мин)',
       type: 'number',
       value: '15',
       min: '1',
       maxlength: 3,
+    });
+
+    const distanceIsochrones = controlsContainer.appendChild(document.createElement('div'));
+    distanceIsochrones.style.display = 'none';
+
+    const distanceInput = new CustomInput({
+      root: distanceIsochrones,
+      labelText: 'Расстояние (метры)',
+      value: '100',
     });
 
     const pointsContainer = controlsContainer.appendChild(document.createElement('div'));
@@ -142,6 +177,7 @@ export class IsochroneControl {
           const lon = Number(longitudeInput.value);
           const lat = Number(latitudeInput.value);
           const time = Number(timeInput.value);
+          const distance = Number(distanceInput.value);
           const profile = transportSelect.getSelectedItem.value as
             | 'foot-walking'
             | 'driving-car'
@@ -157,7 +193,13 @@ export class IsochroneControl {
           this.pointLayer.setVisible(true);
           this.pointSource.addFeature(marker);
 
-          await this.orsService.createIsochrone([lon, lat], profile, time);
+          console.log(this.range_type);
+
+          if (this.range_type === 'time') {
+            await this.orsService.createIsochrone([lon, lat], profile, time, 'time');
+          } else {
+            await this.orsService.createIsochrone([lon, lat], profile, distance, 'distance');
+          }
         } catch (error) {
           console.error('Ошибка при построении изохроны:', error);
           alert('Не удалось построить изохрону. Проверьте параметры и попробуйте снова.');
