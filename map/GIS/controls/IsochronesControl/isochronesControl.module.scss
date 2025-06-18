@@ -1,11 +1,17 @@
-.transportGroup {
-  padding-bottom: 15px;
+.isochroneControl {
+  padding: 0 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-.timeGroup {
-  padding-bottom: 15px;
+
+.pointsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 
 .buttonContainer {
-  padding: 10px;
+  padding: 15px 0;
   text-align: end;
 }
