@@ -19,6 +19,8 @@ export class IsochroneControl {
   private orsService: OpenRouteService;
   private pointLayer: VectorLayer<VectorSource>;
   private pointSource: VectorSource;
+  private tempPointLayer: VectorLayer<VectorSource>;
+  private tempPointSource: VectorSource;
   private cursorTooltip: HelpTooltip;
   private range_type: 'time' | 'distance' = 'time';
   private pointsArr: Array<{
@@ -53,7 +55,26 @@ export class IsochroneControl {
       }),
       zIndex: 1000,
     });
+
+    this.tempPointSource = new VectorSource();
+    this.tempPointLayer = new VectorLayer({
+      source: this.tempPointSource,
+      style: new Style({
+        image: new CircleStyle({
+          radius: 5,
+          fill: new Fill({
+            color: 'rgba(255, 255, 255, 0.57)',
+          }),
+          stroke: new Stroke({
+            color: 'white',
+            width: 2.5,
+          }),
+        }),
+      }),
+      zIndex: 999,
+    });
     this.map.addLayer(this.pointLayer);
+    this.map.addLayer(this.tempPointLayer);
 
     this.render();
   }
@@ -233,12 +254,24 @@ export class IsochroneControl {
       this.cursorTooltip.createHelpTooltip('Укажите точку на карте');
 
       this.map.once('singleclick', (e) => {
+        const coordinate = e.coordinate;
         mapClicker.classList.remove(Styles.active);
         this.cursorTooltip.removeHelpTooltip();
+        const [longitude, latitude] = toLonLat(coordinate);
 
-        const [longitude, latitude] = toLonLat(e.coordinate);
+        const tempPoint = new Point(coordinate);
+        const tempMarker = new Feature({
+          geometry: tempPoint,
+          name: 'Предпросмотр точки',
+        });
+        this.tempPointSource.addFeature(tempMarker);
+
         lonInput.value = longitude.toFixed(3);
         latInput.value = latitude.toFixed(3);
+
+        setTimeout(() => {
+          this.tempPointSource.clear();
+        }, 3000);
       });
     });
 
