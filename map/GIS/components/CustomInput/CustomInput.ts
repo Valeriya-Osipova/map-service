@@ -20,6 +20,7 @@ export interface CustomInputParams {
   setInt?: boolean;
   hidden?: boolean;
   maxlength?: number;
+  listener?: (e) => void;
   onChange?: (value: string) => void;
 }
 
@@ -169,6 +170,9 @@ export class CustomInput {
     }
     if (params?.hidden) {
       this.input.style.display = 'none';
+    }
+    if (params?.listener) {
+      this.input.addEventListener('input', (e) => params.listener(e));
     }
     if (this.maxlength) {
       this.input.maxLength = this.maxlength;
