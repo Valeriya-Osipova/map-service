@@ -20,9 +20,15 @@
 
   &--white {
     background: white;
-    color: black;
-    border: 1px solid #ccc;
+    color: #1fb7a9;
+    border: 1px solid #1fb7a9;
     border-radius: 5px;
+
+    &:hover {
+      border: 1px solid #1c8279;
+      color: #1c8279;
+    }
+
     &:active {
       transform: scale(0.98);
     }

@@ -36,7 +36,7 @@ export class OpenRouteService {
   constructor(private map: Map) {}
 
   async createIsochrone(
-    center: [number, number],
+    coordinates: number[][],
     profile: 'foot-walking' | 'driving-car' | 'cycling-regular',
     time: number,
     range_type?: 'time' | 'distance',
@@ -46,7 +46,7 @@ export class OpenRouteService {
       console.log(range_type);
 
       const requestBody: any = {
-        locations: [center],
+        locations: coordinates,
         range: [range_type === 'time' ? time * 60 : time],
         range_type: range_type || 'time',
         location_type: 'start',

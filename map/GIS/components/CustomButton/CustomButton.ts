@@ -20,13 +20,13 @@ export class CustomButton {
     text,
     icon,
     clickHandler,
-    variant = 'default',
+    variant,
     disabled = false,
     tooltip,
     className,
   }: CustomButtonProps) {
     this.root = root;
-
+    variant = variant ? variant : 'default';
     this.button = document.createElement('button');
     this.button.disabled = disabled;
 

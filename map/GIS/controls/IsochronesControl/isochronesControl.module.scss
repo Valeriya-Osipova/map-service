@@ -46,3 +46,18 @@
     height: 24px;
   }
 }
+
+.deleteBtn {
+  display: flex;
+  align-items: center;
+  color: #3f494e;
+
+  &:hover {
+    color: #1890ff;
+  }
+
+  &.disable {
+    color: #8d9499;
+    pointer-events: none;
+  }
+}

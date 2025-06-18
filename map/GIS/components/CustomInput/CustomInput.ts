@@ -31,6 +31,11 @@ export class CustomInput {
   get value(): string | null | undefined {
     return this.input.value;
   }
+
+  get inputElement(): HTMLInputElement {
+    return this.input;
+  }
+
   get classList(): DOMTokenList {
     return this.input.classList;
   }
