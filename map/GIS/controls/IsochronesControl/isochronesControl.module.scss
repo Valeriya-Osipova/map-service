@@ -8,10 +8,37 @@
 .pointsContainer {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 10px;
 }
 
 .buttonContainer {
   padding: 15px 0;
   text-align: end;
+}
+
+.mapClicker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-left: 8px;
+  cursor: pointer;
+  color: #3f494e;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #1890ff;
+  }
+
+  &.active {
+    color: #1890ff;
+    transform: scale(1.1);
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 }
