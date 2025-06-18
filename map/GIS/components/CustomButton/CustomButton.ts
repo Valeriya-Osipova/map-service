@@ -4,6 +4,7 @@ interface CustomButtonProps {
   root: HTMLElement;
   clickHandler: () => void;
   text?: string;
+  id?: string;
   icon?: HTMLElement;
   variant?: 'default' | 'white' | 'icon';
   disabled?: boolean;
@@ -18,6 +19,7 @@ export class CustomButton {
   constructor({
     root,
     text,
+    id,
     icon,
     clickHandler,
     variant,
@@ -35,6 +37,10 @@ export class CustomButton {
       textSpan.className = styles.root__text;
       textSpan.textContent = text;
       this.button.appendChild(textSpan);
+    }
+
+    if (id) {
+      this.button.id = id;
     }
 
     if (icon) {

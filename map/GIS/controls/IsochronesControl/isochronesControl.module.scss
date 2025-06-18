@@ -17,8 +17,10 @@
 }
 
 .buttonContainer {
-  padding: 15px 0;
-  text-align: end;
+  padding: 20px 0;
+  gap: 10px;
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .mapClicker {

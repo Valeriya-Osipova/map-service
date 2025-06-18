@@ -41,7 +41,7 @@ export class OpenRouteService {
     time: number,
     range_type?: 'time' | 'distance',
     options: IsochroneOptions = {},
-  ): Promise<void> {
+  ): Promise<FeatureCollection<Polygon>> {
     try {
       console.log(range_type);
 
@@ -100,6 +100,7 @@ export class OpenRouteService {
       };
 
       this.addToMap(geoJson, profile);
+      return geoJson;
     } catch (error) {
       console.error('Error creating isochrone:', error);
       throw error;

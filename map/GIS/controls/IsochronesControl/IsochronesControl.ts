@@ -13,6 +13,7 @@ import CustomSelect from '../../components/CustomSelect/CustomSelect';
 import { CustomInput } from '../../components/CustomInput/CustomInput';
 import HelpTooltip from '../../components/HelpTooltip/HelpTooltip';
 import { CustomCheckbox } from '../../components/CustomCheckbox/CustomCheckbox';
+import { FeatureCollection, Polygon } from 'geojson';
 
 export class IsochroneControl {
   private container: HTMLDivElement;
@@ -204,12 +205,34 @@ export class IsochroneControl {
           });
 
           this.pointLayer.setVisible(true);
+          let geoJSONResp;
 
           if (this.range_type === 'time') {
-            await this.orsService.createIsochrone(coordinates, profile, time, 'time');
+            geoJSONResp = await this.orsService.createIsochrone(coordinates, profile, time, 'time');
           } else {
-            await this.orsService.createIsochrone(coordinates, profile, distance, 'distance');
+            geoJSONResp = await this.orsService.createIsochrone(
+              coordinates,
+              profile,
+              distance,
+              'distance',
+            );
           }
+
+          const oldExportBtn = document.getElementById('export-button');
+          if (oldExportBtn) {
+            oldExportBtn.remove();
+          }
+
+          const exportButton = new CustomButton({
+            root: buttonContainer,
+            className: Styles.exportBtn,
+            id: 'export-button',
+            text: 'Экспорт GeoJSON',
+            variant: 'white',
+            clickHandler: () => {
+              this.downloadGeoJSON(geoJSONResp);
+            },
+          });
         } catch (error) {
           console.error('Ошибка при построении изохроны:', error);
           alert('Не удалось построить изохрону. Проверьте параметры и попробуйте снова.');
@@ -305,6 +328,18 @@ export class IsochroneControl {
       deleteBtn: deleteBtn,
     });
     this.updateDeleteButtons();
+  }
+
+  private downloadGeoJSON(geoJson: FeatureCollection<Polygon>) {
+    const dataStr = JSON.stringify(geoJson, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+    const exportFileDefaultName = `isochrone_${new Date().toISOString().slice(0, 10)}.geojson`;
+
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
   }
 
   private updateDeleteButtons() {
